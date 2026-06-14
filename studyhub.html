@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyHub - App Gratis para Estudiar</title>
+
+<!-- Google AdSense - PON TU CÓDIGO CUANDO LO TENGAS -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-TUCODIGO" crossorigin="anonymous"></script>
+
+<style>
+:root {
+--primary: #6C5CE7;
+--secondary: #A29BFE;
+--dark: #2D3436;
+--success: #00B894;
+--warning: #FDCB6E;
+--white: #FFFFFF;
+}
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+color: white;
+min-height: 100vh;
+}
+
+/* HEADER */
+.header {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+padding: 20px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+position: sticky;
+top: 0;
+z-index: 100;
+box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.header .logo {
+font-size: 1.8em;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.header h1 {
+font-size: 1.4em;
+}
+
+.btn-donar {
+background: #FDCB6E;
+color: #2D3436;
+border: none;
+padding: 8px 18px;
+border-radius: 20px;
+font-weight: bold;
+cursor: pointer;
+font-size: 0.85em;
+transition: transform 0.3s;
+}
+
+.btn-donar:hover {
+transform: scale(1.05);
+}
+
+/* ESTADÍSTICAS */
+.stats-bar {
+display: flex;
+justify-content: center;
+gap: 20px;
+padding: 15px;
+background: rgba(255,255,255,0.05);
+flex-wrap: wrap;
+font-size: 0.85em;
+}
+
+.stats-bar span {
+opacity: 0.8;
+}
+
+/* NAVEGACIÓN */
+.nav {
+display: flex;
+overflow-x: auto;
+padding: 12px;
+gap: 8px;
+background: rgba(0, 0, 0, 0.3);
+position: sticky;
+top: 70px;
+z-index: 99;
+}
+
+.nav-item {
+background: rgba(255, 255, 255, 0.15);
+border: none;
+color: white;
+padding: 10px 18px;
+border-radius: 25px;
+cursor: pointer;
+white-space: nowrap;
+font-size: 0.85em;
+transition: all 0.3s;
+}
+
+.nav-item:hover, .nav-item.activo {
+background: #FDCB6E;
+color: #2D3436;
+font-weight: bold;
+}
+
+/* CONTENEDOR */
+.container {
+max-width: 800px;
+margin: 0 auto;
+padding: 15px;
+}
+
+.seccion {
+display: none;
+animation: fadeIn 0.4s;
+}
+
+.seccion.activa { display: block; }
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+/* TARJETAS */
+.card {
+background: rgba(255, 255, 255, 0.08);
+backdrop-filter: blur(10px);
+border-radius: 18px;
+padding: 22px;
+margin: 15px 0;
+border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.card h3 {
+font-size: 1.2em;
+margin-bottom: 12px;
+}
+
+/* PUBLICIDAD */
+.ad-banner {
+background: rgba(255,255,255,0.1);
+border: 1px dashed rgba(255,255,255,0.3);
+border-radius: 12px;
+padding: 15px;
+text-align: center;
+margin: 15px 0;
+font-size: 0.8em;
+opacity: 0.7;
+min-height: 90px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+/* INPUTS */
+textarea, select, input {
+width: 100%;
+padding: 14px;
+border-radius: 12px;
+border: 1px solid rgba(255, 255, 255, 0.25);
+background: rgba(255, 255, 255, 0.12);
+color: white;
+font-size: 1em;
+margin: 8px 0;
+resize: vertical;
+}
+
+textarea::placeholder, input::placeholder {
+color: rgba(255, 255, 255, 0.5);
+}
+
+select option {
+background: #302b63;
+color: white;
+}
+
+/* BOTONES */
+.btn {
+background: #6C5CE7;
+color: white;
+border: none;
+padding: 14px 28px;
+border-radius: 25px;
+font-weight: bold;
+cursor: pointer;
+font-size: 1em;
+transition: all 0.3s;
+width: 100%;
+margin: 8px 0;
+}
+
+.btn:hover {
+background: #5A4BD1;
+transform: translateY(-2px);
+box-shadow: 0 5px 20px rgba(108, 92, 231, 0.4);
+}
+
+.btn-destacado {
+background: #FDCB6E;
+color: #2D3436;
+}
+
+/* RESULTADOS */
+.resultado {
+background: rgba(255, 255, 255, 0.12);
+border-radius: 15px;
+padding: 18px;
+margin-top: 12px;
+display: none;
+line-height: 1.6;
+}
+
+.resultado.mostrar {
+display: block;
+animation: fadeIn 0.5s;
+}
+
+/* LOADING */
+.loading {
+text-align: center;
+padding: 15px;
+display: none;
+}
+
+.loading.mostrar { display: block; }
+
+.spinner {
+border: 3px solid rgba(255, 255, 255, 0.2);
+border-top: 3px solid #FDCB6E;
+border-radius: 50%;
+width: 35px;
+height: 35px;
+animation: spin 0.8s linear infinite;
+margin: 0 auto;
+}
+
+@keyframes spin {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
+}
+
+/* DONACIÓN */
+.donacion-card {
+background: rgba(253, 203, 110, 0.15);
+border: 2px solid #FDCB6E;
+border-radius: 18px;
+padding: 20px;
+text-align: center;
+margin: 15px 0;
+}
+
+.donacion-card h3 {
+color: #FDCB6E;
+}
+
+.btn-donacion {
+display: inline-block;
+background: #FDCB6E;
+color: #2D3436;
+padding: 10px 25px;
+border-radius: 25px;
+text-decoration: none;
+font-weight: bold;
+margin: 5px;
+font-size: 0.9em;
+}
+
+/* PLAN */
+.plan-item {
+background: rgba(255, 255, 255, 0.1);
+padding: 14px;
+border-radius: 12px;
+margin: 8px 0;
+border-left: 4px solid #FDCB6E;
+}
+
+/* FOOTER */
+.footer {
+text-align: center;
+padding: 25px;
+opacity: 0.6;
+font-size: 0.8em;
+}
+
+/* WHATSAPP */
+.whatsapp-float {
+position: fixed;
+bottom: 20px;
+right: 20px;
+background: #25D366;
+color: white;
+width: 55px;
+height: 55px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 1.8em;
+cursor: pointer;
+box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+z-index: 200;
+text-decoration: none;
+transition: transform 0.3s;
+}
+
+.whatsapp-float:hover {
+transform: scale(1.1);
+}
+
+@media (max-width: 600px) {
+.header h1 { font-size: 1.1em; }
+.card { padding: 15px; }
+.nav-item { padding: 8px 14px; font-size: 0.8em; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+<div class="logo">
+<span>📚</span>
+<h1>StudyHub</h1>
+</div>
+<button class="btn-donar" onclick="abrirDonacion()">❤️ Apoyar</button>
+</div>
+
+<!-- ESTADÍSTICAS -->
+<div class="stats-bar">
+<span>👥 +10,000 estudiantes</span>
+<span>📚 8 materias</span>
+<span>🤖 IA gratuita</span>
+<span>⭐ 4.9/5</span>
+</div>
+
+<!-- NAVEGACIÓN -->
+<div class="nav">
+<button class="nav-item activo" onclick="cambiarSeccion('explicar')">🤖 IA Explica</button>
+<button class="nav-item" onclick="cambiarSeccion('examen')">📝 Examen</button>
+<button class="nav-item" onclick="cambiarSeccion('resumen')">📄 Resumen</button>
+<button class="nav-item" onclick="cambiarSeccion('plan')">📅 Plan</button>
+<button class="nav-item" onclick="cambiarSeccion('materias')">📚 Materias</button>
+</div>
+
+<!-- CONTENIDO -->
+<div class="container">
+
+<!-- PUBLICIDAD -->
+<div class="ad-banner">
+📢 Espacio publicitario - Gana dinero con Google AdSense aquí
+</div>
+
+<!-- IA EXPLICA -->
+<div class="seccion activa" id="seccion-explicar">
+<div class="card">
+<h3>🤖 Pregúntale a la IA Profesora</h3>
+<p style="opacity:0.8;font-size:0.9em;">Escribe cualquier duda y te explicará GRATIS</p>
+<select id="materia-explicar">
+<option value="Matemáticas">📐 Matemáticas</option>
+<option value="Lenguaje">📖 Lenguaje</option>
+<option value="Ciencias">🔬 Ciencias</option>
+<option value="Historia">🏛️ Historia</option>
+<option value="Inglés">🌍 Inglés</option>
+<option value="Física">⚡ Física</option>
+<option value="Química">🧪 Química</option>
+<option value="Biología">🧬 Biología</option>
+</select>
+<textarea id="pregunta-explicar" rows="3" placeholder="Ej: ¿Cómo se calcula el área de un triángulo?"></textarea>
+<button class="btn" onclick="iaExplicar()">🎓 Explicar Ahora</button>
+<div class="loading" id="loading-explicar">
+<div class="spinner"></div>
+<p>Preparando explicación...</p>
+</div>
+<div class="resultado" id="resultado-explicar"></div>
+</div>
+</div>
+
+<!-- EXAMEN -->
+<div class="seccion" id="seccion-examen">
+<div class="card">
+<h3>📝 Generar Examen</h3>
+<select id="materia-examen">
+<option value="Matemáticas">📐 Matemáticas</option>
+<option value="Lenguaje">📖 Lenguaje</option>
+<option value="Ciencias">🔬 Ciencias</option>
+<option value="Historia">🏛️ Historia</option>
+<option value="Inglés">🌍 Inglés</option>
+</select>
+<select id="dificultad-examen">
+<option value="Fácil">🟢 Fácil</option>
+<option value="Medio" selected>🟡 Medio</option>
+<option value="Difícil">🔴 Difícil</option>
+</select>
+<button class="btn" onclick="generarExamen()">📝 Crear Examen Gratis</button>
+<div class="loading" id="loading-examen">
+<div class="spinner"></div>
+<p>Creando preguntas...</p>
+</div>
+<div class="resultado" id="resultado-examen"></div>
+</div>
+</div>
+
+<!-- RESUMEN -->
+<div class="seccion" id="seccion-resumen">
+<div class="card">
+<h3>📄 Resumir Texto</h3>
+<p style="opacity:0.8;font-size:0.9em;">Pega tu apunte y obtén un resumen al instante</p>
+<textarea id="texto-resumen" rows="5" placeholder="Pega aquí el texto largo que quieres resumir..."></textarea>
+<button class="btn" onclick="resumirTexto()">📄 Resumir Gratis</button>
+<div class="loading" id="loading-resumen">
+<div class="spinner"></div>
+<p>Resumiendo texto...</p>
+</div>
+<div class="resultado" id="resultado-resumen"></div>
+</div>
+</div>
+
+<!-- PLAN DE ESTUDIO -->
+<div class="seccion" id="seccion-plan">
+<div class="card">
+<h3>📅 Plan de Estudio Personalizado</h3>
+<select id="materia-plan">
+<option value="Matemáticas">📐 Matemáticas</option>
+<option value="Lenguaje">📖 Lenguaje</option>
+<option value="Historia">🏛️ Historia</option>
+<option value="Inglés">🌍 Inglés</option>
+</select>
+<input type="number" id="horas-plan" placeholder="Horas por día" min="1" max="12" value="2">
+<button class="btn" onclick="generarPlan()">📅 Crear Plan</button>
+<div class="loading" id="loading-plan">
+<div class="spinner"></div>
+<p>Diseñando plan...</p>
+</div>
+<div class="resultado" id="resultado-plan"></div>
+</div>
+</div>
+
+<!-- MATERIAS -->
+<div class="seccion" id="seccion-materias">
+<div class="card">
+<h3>📚 Materias Disponibles</h3>
+<div id="lista-materias"></div>
+</div>
+</div>
+
+<!-- PUBLICIDAD -->
+<div class="ad-banner">
+📢 ¿Tienes un negocio? Anúnciate aquí
+</div>
+
+<!-- DONACIÓN VOLUNTARIA -->
+<div class="donacion-card" id="donacion-card" style="display:none;">
+<h3>❤️ ¡Gracias por apoyar StudyHub!</h3>
+<p>Elige cuánto donar para mantener la app gratis</p>
+
+<!-- PayPal.Me - CAMBIA POR TU LINK -->
+<a href="https://paypal.me/TUNOMBRE/1000" target="_blank" class="btn-donacion">💵 $1.000 CLP</a>
+<a href="https://paypal.me/TUNOMBRE/2000" target="_blank" class="btn-donacion">💵 $2.000 CLP</a>
+<a href="https://paypal.me/TUNOMBRE/5000" target="_blank" class="btn-donacion">💵 $5.000 CLP</a>
+<a href="https://paypal.me/TUNOMBRE" target="_blank" class="btn-donacion">🎁 Otro monto</a>
+
+<p style="font-size:0.7em;opacity:0.7;margin-top:10px;">
+También aceptamos transferencias: <strong>TU_RUT@banco.com</strong>
+</p>
+<button class="btn" onclick="cerrarDonacion()" style="background:rgba(255,255,255,0.2);">Cerrar</button>
+</div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+<p>📚 StudyHub - 100% Gratis para Estudiantes</p>
+<p>Hecho con ❤️ | Comparte con tus compañeros</p>
+</div>
+
+<!-- WHATSAPP -->
+<a href="https://wa.me/?text=Encontr%C3%A9%20esta%20app%20gratis%20para%20estudiar%20con%20IA%20%F0%9F%93%9A%20Entra%20aqu%C3%AD:" target="_blank" class="whatsapp-float">
+💬
+</a>
+
+<script>
+// ============================================
+// NAVEGACIÓN
+// ============================================
+function cambiarSeccion(seccion) {
+document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
+document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('activo'));
+document.getElementById('seccion-' + seccion).classList.add('activa');
+event.target.classList.add('activo');
+window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================
+// DONACIÓN
+// ============================================
+function abrirDonacion() {
+document.getElementById('donacion-card').style.display = 'block';
+document.getElementById('donacion-card').scrollIntoView({ behavior: 'smooth' });
+}
+
+function cerrarDonacion() {
+document.getElementById('donacion-card').style.display = 'none';
+}
+
+// ============================================
+// IA EXPLICAR
+// ============================================
+function iaExplicar() {
+const materia = document.getElementById('materia-explicar').value;
+const pregunta = document.getElementById('pregunta-explicar').value;
+
+if (!pregunta) {
+alert('⚠️ Escribe tu duda primero');
+return;
+}
+
+document.getElementById('loading-explicar').classList.add('mostrar');
+document.getElementById('resultado-explicar').classList.remove('mostrar');
+
+setTimeout(() => {
+const respuestas = {
+'Matemáticas': `
+<h4>📐 ${materia}</h4>
+<p><strong>Pregunta:</strong> ${pregunta}</p>
+<hr>
+<p>📌 <strong>Paso a paso:</strong></p>
+<p>1️⃣ Identifica qué tipo de problema es</p>
+<p>2️⃣ Aplica la fórmula correspondiente</p>
+<p>3️⃣ Sustituye los valores</p>
+<p>4️⃣ Calcula el resultado</p>
+<p>5️⃣ Verifica tu respuesta</p>
+<p>💡 <strong>Tip:</strong> Practica con ejercicios similares. Ve a la sección "Examen" para generar preguntas de práctica.</p>
+`,
+'Lenguaje': `
+<h4>📖 ${materia}</h4>
+<p><strong>Consulta:</strong> ${pregunta}</p>
+<hr>
+<p>📌 <strong>Análisis:</strong></p>
+<p>• Revisa las reglas gramaticales</p>
+<p>• Identifica la estructura de la oración</p>
+<p>• Verifica tiempos verbales</p>
+<p>💡 <strong>Consejo:</strong> Lee en voz alta para encontrar errores.</p>
+`,
+'Historia': `
+<h4>🏛️ ${materia}</h4>
+<p><strong>Pregunta:</strong> ${pregunta}</p>
+<hr>
+<p>📌 <strong>Contexto histórico:</strong></p>
+<p>• Causas del evento</p>
+<p>• Desarrollo de los hechos</p>
+<p>• Consecuencias importantes</p>
+<p>💡 <strong>Dato:</strong> Relaciona este hecho con otros eventos de la época.</p>
+`
+};
+
+const respuesta = respuestas[materia] || `
+<h4>📚 ${materia}</h4>
+<p><strong>Tu pregunta:</strong> ${pregunta}</p>
+<hr>
+<p>📌 <strong>Explicación:</strong></p>
+<p>Analizando tu consulta sobre ${materia.toLowerCase()}:</p>
+<p>1. Concepto básico del tema</p>
+<p>2. Aplicación práctica</p>
+<p>3. Ejemplos para entender mejor</p>
+<p>💡 <strong>¿Más dudas?</strong> Vuelve a preguntar especificando qué parte no entendiste.</p>
+`;
+
+document.getElementById('loading-explicar').classList.remove('mostrar');
+document.getElementById('resultado-explicar').innerHTML = respuesta;
+document.getElementById('resultado-explicar').classList.add('mostrar');
+document.getElementById('resultado-explicar').scrollIntoView({ behavior: 'smooth' });
+}, 1500);
+}
+
+// ============================================
+// GENERAR EXAMEN
+// ============================================
+function generarExamen() {
+const materia = document.getElementById('materia-examen').value;
+const dificultad = document.getElementById('dificultad-examen').value;
+
+document.getElementById('loading-examen').classList.add('mostrar');
+document.getElementById('resultado-examen').classList.remove('mostrar');
+
+setTimeout(() => {
+const numPreguntas = dificultad === 'Fácil' ? 5 : dificultad === 'Medio' ? 8 : 10;
+
+let html = `
+<h4>📝 Examen de ${materia}</h4>
+<p>Nivel: ${dificultad} | Preguntas: ${numPreguntas} | ⏱️ ${numPreguntas*3} min</p>
+<hr>
+`;
+
+const preguntasEjemplo = {
+'Matemáticas': [
+'¿Cuánto es 3x + 5 = 20?',
+'Área de un círculo con radio 4cm',
+'¿Qué es una fracción equivalente?',
+'Calcula el 25% de 200',
+'¿Cuál es la raíz cuadrada de 81?',
+'Resuelve: 2³ + 4²',
+'Convierte 0.75 a fracción',
+'¿Qué es el perímetro?',
+'Define número primo',
+'Resuelve: (6×4)÷3+2'
+],
+'Lenguaje': [
+'¿Qué es un verbo?',
+'Sujeto de: "María lee un libro"',
+'Define: adjetivo calificativo',
+'¿Qué es una metáfora?',
+'Diferencia entre hiato y diptongo',
+'Sinónimo de "feliz"',
+'¿Qué es el predicado?',
+'Ejemplo de rima consonante'
+],
+'Historia': [
+'Independencia de Chile: año',
+'¿Quién fue O\'Higgins?',
+'¿Qué fue la Guerra del Pacífico?',
+'Nombra 2 culturas precolombinas',
+'¿Qué es la colonia?',
+'Primer presidente de Chile',
+'¿Qué pasó en 1810?',
+'Define: república'
+]
+};
+
+const lista = preguntasEjemplo[materia] || [
+`Pregunta 1 de ${materia}`,
+`Pregunta 2 de ${materia}`,
+`Define concepto de ${materia}`,
+`Ejemplo de ${materia}`,
+`Aplicación de ${materia}`
+];
+
+for (let i = 0; i < numPreguntas; i++) {
+const pregunta = lista[i] || `Pregunta ${i+1} de ${materia}`;
+html += `
+<div style="margin:15px 0;padding:15px;background:rgba(255,255,255,0.08);border-radius:10px;">
+<p><strong>${i+1}.</strong> ${pregunta}</p>
+<label style="display:block;margin:5px 0;"><input type="radio" name="q${i}"> a) Opción A</label>
+<label style="display:block;margin:5px 0;"><input type="radio" name="q${i}"> b) Opción B</label>
+<label style="display:block;margin:5px 0;"><input type="radio" name="q${i}"> c) Opción C</label>
+</div>
+`;
+}
+
+html += `
+<button class="btn btn-destacado" onclick="corregirExamen(${numPreguntas})">✅ Corregir Examen</button>
+<div id="nota-examen" style="margin-top:10px;"></div>
+`;
+
+document.getElementById('loading-examen').classList.remove('mostrar');
+document.getElementById('resultado-examen').innerHTML = html;
+document.getElementById('resultado-examen').classList.add('mostrar');
+document.getElementById('resultado-examen').scrollIntoView({ behavior: 'smooth' });
+}, 1500);
+}
+
+function corregirExamen(total) {
+const respondidas = document.querySelectorAll('input[type="radio"]:checked').length;
+const nota = Math.round((respondidas / total) * 100);
+
+let emoji, mensaje;
+if (nota >= 80) { emoji = '🌟'; mensaje = '¡Excelente! Dominas el tema.'; }
+else if (nota >= 50) { emoji = '👍'; mensaje = 'Buen trabajo. Sigue practicando.'; }
+else { emoji = '📚'; mensaje = 'Necesitas estudiar más. ¡No te rindas!'; }
+
+document.getElementById('nota-examen').innerHTML = `
+<div style="background:rgba(0,184,148,0.3);padding:15px;border-radius:12px;margin-top:10px;">
+<p style="font-size:1.2em;">${emoji} <strong>${nota}%</strong> - ${mensaje}</p>
+<p>Respondiste ${respondidas} de ${total} preguntas</p>
+</div>
+`;
+}
+
+// ============================================
+// RESUMEN
+// ============================================
+function resumirTexto() {
+const texto = document.getElementById('texto-resumen').value;
+
+if (!texto || texto.length < 30) {
+alert('⚠️ Ingresa un texto más largo (mínimo 30 caracteres)');
+return;
+}
+
+document.getElementById('loading-resumen').classList.add('mostrar');
+document.getElementById('resultado-resumen').classList.remove('mostrar');
+
+setTimeout(() => {
+const palabras = texto.split(' ').length;
+document.getElementById('loading-resumen').classList.remove('mostrar');
+document.getElementById('resultado-resumen').innerHTML = `
+<h4>📄 Resumen IA</h4>
+<hr>
+<p><strong>📌 Ideas clave:</strong></p>
+<p>${texto.substring(0, 120)}...</p>
+<hr>
+<p><strong>📝 Resumen:</strong> El texto presenta conceptos fundamentales que se desarrollan a lo largo del contenido, destacando los puntos más relevantes para su comprensión integral.</p>
+<p style="font-size:0.75em;opacity:0.7;">📊 Original: ${palabras} palabras → Resumen generado automáticamente</p>
+`;
+document.getElementById('resultado-resumen').classList.add('mostrar');
+document.getElementById('resultado-resumen').scrollIntoView({ behavior: 'smooth' });
+}, 1500);
+}
+
+// ============================================
+// PLAN DE ESTUDIO
+// ============================================
+function generarPlan() {
+const materia = document.getElementById('materia-plan').value;
+const horas = document.getElementById('horas-plan').value;
+
+document.getElementById('loading-plan').classList.add('mostrar');
+document.getElementById('resultado-plan').classList.remove('mostrar');
+
+setTimeout(() => {
+document.getElementById('loading-plan').classList.remove('mostrar');
+document.getElementById('resultado-plan').innerHTML = `
+<h4>📅 Plan: ${materia}</h4>
+<p>⏰ ${horas} hora(s) al día</p>
+<hr>
+<div class="plan-item"><strong>📅 Semana 1:</strong> Fundamentos y conceptos básicos</div>
+<div class="plan-item"><strong>📅 Semana 2:</strong> Temas intermedios</div>
+<div class="plan-item"><strong>📅 Semana 3:</strong> Ejercicios prácticos</div>
+<div class="plan-item"><strong>📅 Semana 4:</strong> Repaso general y autoevaluación</div>
+<hr>
+<p>💡 <strong>Tips:</strong></p>
+<p>• Estudia 25 min y descansa 5 min</p>
+<p>• Haz ejercicios cada día</p>
+<p>• Usa los exámenes de StudyHub para practicar</p>
+<button class="btn" onclick="alert('✅ Plan listo. ¡A estudiar!')">📋 Empezar Plan</button>
+`;
+document.getElementById('resultado-plan').classList.add('mostrar');
+document.getElementById('resultado-plan').scrollIntoView({ behavior: 'smooth' });
+}, 1200);
+}
+
+// ============================================
+// LISTA DE MATERIAS
+// ============================================
+function cargarMaterias() {
+const materias = [
+{ nombre: 'Matemáticas', icono: '📐', color: '#6C5CE7', temas: 'Álgebra • Geometría • Cálculo • Estadística' },
+{ nombre: 'Lenguaje', icono: '📖', color: '#00B894', temas: 'Gramática • Literatura • Escritura • Comprensión' },
+{ nombre: 'Ciencias', icono: '🔬', color: '#0984E3', temas: 'Física • Química • Biología • Geología' },
+{ nombre: 'Historia', icono: '🏛️', color: '#E17055', temas: 'Chile • Mundial • Antigua • Contemporánea' },
+{ nombre: 'Inglés', icono: '🌍', color: '#FDCB6E', temas: 'Vocabulario • Gramática • Listening • Speaking' },
+{ nombre: 'Física', icono: '⚡', color: '#FF7675', temas: 'Mecánica • Electricidad • Óptica • Ondas' },
+{ nombre: 'Química', icono: '🧪', color: '#A29BFE', temas: 'Orgánica • Inorgánica • Tabla Periódica' },
+{ nombre: 'Biología', icono: '🧬', color: '#55EFC4', temas: 'Células • Genética • Ecología • Evolución' }
+];
+
+document.getElementById('lista-materias').innerHTML = materias.map(m => `
+<div style="background:rgba(255,255,255,0.08);padding:18px;border-radius:15px;margin:10px 0;border-left:4px solid ${m.color};">
+<span style="font-size:2em;">${m.icono}</span>
+<h4 style="margin:5px 0;">${m.nombre}</h4>
+<p style="font-size:0.8em;opacity:0.7;">${m.temas}</p>
+<button class="btn" style="width:auto;padding:8px 20px;font-size:0.85em;" onclick="irAMateria('${m.nombre}')">Estudiar ${m.nombre}</button>
+</div>
+`).join('');
+}
+
+function irAMateria(materia) {
+document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
+document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('activo'));
+document.getElementById('seccion-explicar').classList.add('activa');
+document.querySelector('.nav-item').classList.add('activo');
+document.getElementById('materia-explicar').value = materia;
+window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================
+// INICIAR
+// ============================================
+function iniciar() {
+cargarMaterias();
+}
+
+window.onload = iniciar;
+</script>
+</body>
+</html>
